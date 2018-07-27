@@ -1,0 +1,203 @@
+/*
+ * Deque.java
+*/
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class Deque<Item> implements Iterable<Item> {
+    private int count;
+    private Node head;
+    private Node tail;
+    
+    private class Node
+    {
+        private Item item;
+        private Node next;
+        private Node previous;
+        
+        Node(Item i, Node n, Node p)
+        {
+            item = i;
+            next = n;
+            previous = p;
+        }
+    }
+    
+    // Construct an empty deque
+    
+    public Deque()
+    {
+        head = null;
+        tail = null;
+        count = 0;
+    }
+    
+    public boolean isEmpty()
+    {
+        if (count == 0) {
+            return true;
+        }
+        return false;
+    }
+    
+    public int size()
+    {
+        return count;
+    }
+    
+    public void addFirst(Item item)
+    {
+        if (item == null)
+            throw new NullPointerException("item is null");
+        
+        Node oldHead = head;
+        head = new Node(item, oldHead, null);
+       
+        if (count == 0) {
+            tail = head;
+        }
+        if (oldHead != null)
+            oldHead.previous = head;
+        
+        count++;
+    }
+    
+    public void addLast(Item item)
+    {
+        if (item == null)
+            throw new NullPointerException("item is null");
+        
+        Node oldTail = tail;
+        tail = new Node(item, null, oldTail);
+            
+        if (oldTail != null)
+            oldTail.next = tail;
+            
+        if (count == 0)
+            head = tail;
+            
+        count++;
+    }
+    
+    public Item removeFirst()
+    {
+        if (count == 0)
+            throw new NoSuchElementException("element does not exist");
+        
+        Item item = head.item;
+        
+        if (head.next != null) {
+            head = head.next;
+            head.previous = null;
+        } else {
+            head = null;
+        }
+        
+        count--;
+        
+        if (count == 0)
+            tail = head;
+        
+        return item;
+    }
+    
+    public Item removeLast()
+    {
+        if (count == 0)
+            throw new NoSuchElementException("element does not exist");
+        
+        Item item = tail.item;
+        
+        if (tail.previous != null) {
+            tail = tail.previous;
+            tail.next = null;
+        } else {
+            tail = null;
+        }
+            
+        count--;
+        
+        if (count == 0) {
+            head = tail;
+        }
+        
+        return item;
+    }
+    
+    public Iterator<Item> iterator()
+    {
+        return new ListIterator();
+    }
+    
+    private class ListIterator implements Iterator<Item> {
+        private Node current;
+        
+        public ListIterator()
+        {
+            current = head;
+        }
+        
+        public boolean hasNext()
+        {
+            return current != null;
+        }
+        
+        public void remove()
+        {
+            throw new UnsupportedOperationException("Operation not supported");
+        }
+        
+        public Item next()
+        {
+            if (!hasNext())
+                throw new NoSuchElementException("element does not exist");
+            
+            Item item = current.item;
+            current = current.next;
+            
+            return item;
+        }
+    }
+    
+    public static void main(String[] args)
+    {
+        boolean badExit = false;
+        
+        Deque<Integer> deque = new Deque<Integer>();
+        
+        try {
+            deque.addLast(0);            
+            deque.addLast(1);
+            deque.addLast(2);
+            
+            System.out.println(deque.removeFirst()); //    ==> 0
+            
+            deque.addLast(4);
+            deque.addLast(5);
+            
+            System.out.println(deque.removeFirst());  //   ==> 1
+            System.out.println(deque.removeFirst());//    ==> 2
+            
+            deque.addLast(9);
+            
+            System.out.println(deque.removeFirst());
+            
+            for (Integer i : deque)
+                System.out.println(i);
+            
+        } catch (NullPointerException e) {
+            System.out.println(e);
+            badExit = true;
+        } finally {
+            if (badExit)
+                System.out.println("Error occurred - exiting");
+        }    
+    }
+}
+
+
+
+
+
+

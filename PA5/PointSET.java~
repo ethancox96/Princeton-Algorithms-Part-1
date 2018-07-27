@@ -1,0 +1,16 @@
+/******************************************************************************
+ *  Compilation:  javac PointSET.java
+ *  Execution:    java PointSet
+ *  Dependencies: StdDraw.java StdRandom.java
+ *
+ *  Immutable point data type for points in the plane.
+ *
+ ******************************************************************************/
+
+public class PointSET
+{
+    public PointSET()
+    {
+        
+    }
+}

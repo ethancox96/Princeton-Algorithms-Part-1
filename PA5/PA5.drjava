@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<drjava version="drjava-20140826-r5761">
+  <project autorefresh="false" root="" work="">
+    <createjar file=""/>
+    <source>
+      <file active="true" name="KdTree.java" package="" timestamp="28-Aug-2015 19:59:41">
+        <select from="4426" to="4426"/>
+        <scroll column="2417" row="0"/>
+      </file>
+      <file name="RectHV.java" package="" timestamp="20-Aug-2015 16:23:03">
+        <select from="4426" to="4426"/>
+        <scroll column="2417" row="0"/>
+      </file>
+      <file name="Point2D.java" package="" timestamp="22-Aug-2015 14:08:41">
+        <select from="4426" to="4426"/>
+        <scroll column="2417" row="0"/>
+      </file>
+      <file name="PointSET.java" package="" timestamp="23-Aug-2015 13:09:52">
+        <select from="4426" to="4426"/>
+        <scroll column="2417" row="0"/>
+      </file>
+    </source>
+    <included/>
+    <excluded/>
+    <collapsed/>
+    <classpath>
+      <file absolute="false" name="../../../../algs4/algs4.jar"/>
+      <file absolute="false" name="../../../../algs4/stdlib.jar"/>
+    </classpath>
+    <breakpoints>
+      <breakpoint enabled="true" file="KdTree.java" line="73"/>
+    </breakpoints>
+    <watches/>
+    <bookmarks/>
+    <preferences/>
+  </project>
+</drjava>

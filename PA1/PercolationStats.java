@@ -1,0 +1,65 @@
+/*
+ * PercolationStats.java
+ */
+
+public class PercolationStats {
+    private int[] numOpen;
+    private int numTrials;
+    private double mean;
+    private double stddev;
+    private double confidenceLo;
+    private double confidenceHi;
+    private double numSquares;
+    public PercolationStats(int N, int T) {
+        if (N <= 0) throw new IllegalArgumentException("N <= 0");
+        if (T <= 0) throw new IllegalArgumentException("T <= 0");
+        numSquares = N*N;
+        numOpen = new int[T];
+        numTrials = T;
+        int k, count = 0;
+        for (k = 0; k < T; k++) {
+            Percolation perc = new Percolation(N);
+            while (!perc.percolates()) {
+                double i = (StdRandom.uniform() * N) + 1;
+                double j = (StdRandom.uniform() * N) + 1;
+                if (!perc.isOpen((int) i, (int) j)) {
+                    perc.open((int) i, (int) j);
+                    count++;
+                }
+            }
+            numOpen[k] = count;
+            count = 0;
+        }
+    }
+    
+    public double mean() {
+        return StdStats.mean(numOpen)/numSquares;
+    }
+    
+    public double stddev() {
+        return StdStats.stddev(numOpen)/numSquares;
+    }
+    
+    public double confidenceLo() {
+        confidenceLo = mean() - (1.96*stddev())/Math.sqrt(numTrials);
+        return confidenceLo;
+    }
+    
+    public double confidenceHi() {
+        confidenceHi = mean() + (1.96*stddev())/Math.sqrt(numTrials);
+        return confidenceHi;
+    }
+    
+    public static void main(String[] args) {
+        int N = Integer.parseInt(args[0]);
+        int T = Integer.parseInt(args[1]);
+        PercolationStats ps = new PercolationStats(N, T);
+        double mean = ps.mean();
+        double stddev = ps.stddev();
+        double cL = ps.confidenceLo();
+        double cH = ps.confidenceHi();
+        System.out.printf("mean                    = %f\n", mean);
+        System.out.printf("stddev                  = %1.17f\n", stddev);
+        System.out.printf("95%% confidence interval = %1.16f, %1.16f\n", cL, cH);
+    } 
+}

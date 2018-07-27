@@ -1,0 +1,161 @@
+/*
+* Solver.java
+*/
+
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.PriorityQueue;
+
+public class Solver
+{
+    private int numMoves;
+    private Board init;
+    private Stack<Board> solution = new Stack<Board>();
+    private Boolean b = false;
+    private SearchNode sq;
+    
+    public Solver(Board initial)
+    {
+        init = initial;
+        numMoves = 0;
+        //int priority;
+        MinPQ<SearchNode> pq = new MinPQ<SearchNode>();
+        MinPQ<SearchNode> pq2 = new MinPQ<SearchNode>();
+        
+        Board newB = initial.twin();
+        
+        if (initial.isGoal())
+            solution.push(initial);
+        
+        else if (newB.isGoal())
+            solution.push(newB);
+        
+        else {
+            SearchNode init1 = new SearchNode(initial, null, numMoves);
+            for (Board b : initial.neighbors()) {
+                SearchNode sn = new SearchNode(b, init1, numMoves);
+                if (sn.b != init1.b)
+                    pq.insert(sn);
+            }
+            SearchNode newNode = pq.delMin();
+            //solution.enqueue(newNode.b);
+            //numMoves++;
+            
+            SearchNode init2 = new SearchNode(newB, null, numMoves);
+            for (Board c : newB.neighbors()) {
+                SearchNode sn2 = new SearchNode(c, init2, numMoves);
+                if (sn2.b != init2.b)
+                    pq2.insert(sn2);
+            }
+            SearchNode newNode2 = pq2.delMin();
+            
+            numMoves++;
+            
+            while (!newNode.b.isGoal() && !newNode2.b.isGoal()) {
+                for (Board b : newNode.b.neighbors()) {
+                    SearchNode sn = new SearchNode(b, newNode, numMoves + 1);
+                    if (b != newNode.b)
+                        pq.insert(sn);
+                }
+                newNode = pq.delMin();
+                //solution.enqueue(newNode.b);
+                
+                for (Board c : newNode2.b.neighbors()) {
+                    SearchNode sn2 = new SearchNode(c, newNode2, numMoves + 1);
+                    if (c != newNode2.b)
+                        pq.insert(sn2);
+                }
+                newNode2 = pq.delMin();
+                //solution.enqueue(newNode.b);
+                
+                numMoves++;
+            }
+            
+            sq = newNode;
+            
+            if (newNode.b.isGoal())
+                b = true;
+        }
+    }
+    
+    private class SearchNode implements Comparable<SearchNode>
+    {
+        Board b;
+        SearchNode pN;
+        int level;
+        
+        public SearchNode(Board node, SearchNode prevNode, int count)
+        {
+            b = node;
+            pN = prevNode;
+            level = count;
+        }
+        
+        public int priority()
+        {
+            return b.manhattan() + numMoves;
+        }
+        
+        public int compareTo(SearchNode that)
+        {   
+            if (this.priority() < that.priority())
+                return -1;
+            else if(this.priority() == that.priority())
+                return 0;
+            else
+                return 1;
+        }
+    }
+        
+    public boolean isSolvable()
+    {
+        //Solver solver = new Solver(init);
+        
+        if (b == true)
+            return true;
+        
+        return false;
+    }
+    
+    public int moves()
+    {
+        return numMoves;
+    }
+    
+    public Iterable<Board> solution()
+    {
+        //Stack<Board> solution = new Stack<Board>();
+        while (sq.pN != null) {
+            solution.push(sq.b);
+            sq = sq.pN;
+        }
+        return solution;
+    }
+    
+    public static void main(String[] args)
+    {
+        In in = new In(args[0]);
+        int N = in.readInt();
+        int[][] blocks = new int[N][N];
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < N; j++)
+            blocks[i][j] = in.readInt();
+        Board initial = new Board(blocks);
+        
+        // solve the puzzle
+        Solver solver = new Solver(initial);
+        
+        // print solution to standard output
+        if (!solver.isSolvable())
+            StdOut.println("No solution possible");
+        else {
+            StdOut.println("Minimum number of moves = " + solver.moves());
+            for (Board board : solver.solution())
+                StdOut.println(board);
+        }
+    }
+}
+
+
+
+
